@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pokemon API</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Pokemon API</h1>
+        <button onclick="getPokemon()">Get Pokemon</button>
+        <div class="container" id="pokemon-container"></div>
+    </div>
+<script>
+		function getPokemon() {
+			fetch('https://pokeapi.co/api/v2/pokemon?limit=36')
+			.then(response => response.json())
+			.then(data => {
+				const pokemonContainer = document.getElementById('pokemon-container');
+				pokemonContainer.innerHTML = '';
+				data.results.forEach(pokemon => {
+					fetch(pokemon.url)
+					.then(response => response.json())
+					.then(pokemonData => {
+						const pokemonCard = document.createElement('div');
+						pokemonCard.classList.add('card');
+						pokemonCard.classList.add(pokemonData.types[0].type.name);
+						pokemonCard.innerHTML = `
+							<h2>${pokemonData.name}</h2>
+							<img src="${pokemonData.sprites.front_default}">
+							<p>Type: ${pokemonData.types[
+                                pokemonData.types.length - 1
+                            ].type.name}</p>
+                            <p>Height: ${pokemonData.height}</p>
+                            <p>Weight: ${pokemonData.weight}</p>
+                                `;
+                                pokemonContainer.appendChild(pokemonCard);
+                            });
+                        });
+                    });
+                }
+</script>
